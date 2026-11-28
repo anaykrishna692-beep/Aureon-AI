@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080612">
+  <meta name="description" content="AUREON AI - One platform, many AI models.">
+  <title>AUREON AI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #080612;
+      color: white;
+      min-height: 100vh;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .sidebar {
+      width: 245px;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 25px 18px;
+      background: #100c1c;
+      border-right: 1px solid #302044;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: white;
+    }
+
+    .logo span {
+      color: #ad75ff;
+    }
+
+    .new-chat {
+      background: linear-gradient(135deg, #813cff, #ae72ff);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-weight: bold;
+    }
+
+    .nav-title {
+      color: #81758f;
+      font-size: 11px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .nav-item {
+      padding: 13px;
+      color: #c6bdd2;
+      border-radius: 9px;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    .nav-item.active,
+    .nav-item:hover {
+      background: #25183a;
+      color: white;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      color: #9386a3;
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    .main {
+      margin-left: 245px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      height: 70px;
+      padding: 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #302044;
+      background: #0c0916;
+    }
+
+    .model-select {
+      background: #1a1229;
+      border: 1px solid #493265;
+      color: white;
+      padding: 11px 14px;
+      border-radius: 10px;
+      max-width: 220px;
+    }
+
+    .account {
+      color: #c4a0ff;
+      font-size: 13px;
+    }
+
+    .content {
+      flex: 1;
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      padding: 45px 30px 25px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .welcome {
+      text-align: center;
+      margin: 30px 0 40px;
+    }
+
+    .welcome small {
+      color: #b68aff;
+      letter-spacing: 3px;
+    }
+
+    .welcome h1 {
+      font-size: clamp(36px, 6vw, 60px);
+      margin: 20px 0;
+    }
+
+    .welcome h1 span {
+      background: linear-gradient(90deg, #9c5bff, #e0c3ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .welcome p {
+      color: #a99db8;
+      line-height: 1.7;
+    }
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 25px;
+    }
+
+    .tool {
+      background: #130e20;
+      border: 1px solid #39244f;
+      padding: 18px;
+      border-radius: 14px;
+      color: #d9cce9;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .tool strong {
+      display: block;
+      color: #c69aff;
+      margin-bottom: 8px;
+      font-size: 19px;
+    }
+
+    .chat-area {
+      background: #110d1c;
+      border: 1px solid #39244f;
+      border-radius: 17px;
+      padding: 20px;
+      flex: 1;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 10px 0 20px;
+    }
+
+    .message {
+      padding: 13px 16px;
+      max-width: 85%;
+      border-radius: 13px;
+      line-height: 1.6;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .assistant {
+      background: #251936;
+      align-self: flex-start;
+    }
+
+    .user {
+      background: #7840ce;
+      align-self: flex-end;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+      padding: 8px;
+      border: 1px solid #493265;
+      background: #090713;
+      border-radius: 12px;
+    }
+
+    .input-area input {
+      flex: 1;
+      min-width: 0;
+      padding: 12px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: white;
+    }
+
+    .send {
+      background: #9654ed;
+      border: none;
+      border-radius: 9px;
+      color: white;
+      padding: 0 18px;
+    }
+
+    footer {
+      color: #766b86;
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+    }
+
+    @media(max-width: 700px) {
+      .sidebar {
+        width: 65px;
+        padding: 20px 8px;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 0;
+      }
+
+      .logo span {
+        font-size: 18px;
+      }
+
+      .new-chat {
+        font-size: 0;
+        width: 45px;
+        height: 45px;
+      }
+
+      .new-chat::after {
+        content: "+";
+        font-size: 23px;
+      }
+
+      .nav-title,
+      .nav-label,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .nav-item {
+        font-size: 19px;
+        padding: 12px;
+      }
+
+      .main {
+        margin-left: 65px;
+      }
+
+      header {
+        padding: 0 12px;
+      }
+
+      .model-select {
+        max-width: 165px;
+        font-size: 11px;
+      }
+
+      .account {
+        font-size: 10px;
+      }
+
+      .content {
+        padding: 25px 12px;
+      }
+
+      .tools {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome {
+        margin: 25px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">✦ AUREON <span>AI</span></div>
+
+    <button class="new-chat" id="newChat">+ New Chat</button>
+
+    <div>
+      <div class="nav-title">WORKSPACE</div>
+      <div class="nav-item active" id="chatNav">💬 <span class="nav-label">AI Chat</span></div>
+      <div class="nav-item" id="toolsNav">✧ <span class="nav-label">AI Tools</span></div>
+      <div class="nav-item" id="historyNav">◷ <span class="nav-label">History</span></div>
+      <div class="nav-item" id="settingsNav">⚙ <span class="nav-label">Settings</span></div>
+    </div>
+
+    <div class="sidebar-bottom">
+      AUREON AI V2.0<br>
+      ONE PLATFORM. MANY AI MODELS.
+    </div>
+  </aside>
+
+  <div class="main">
+    <header>
+      <select class="model-select" id="model">
+        <option value="auto">✦ Automatic Selection</option>
+        <option value="openai">OpenAI</option>
+        <option value="claude">Claude</option>
+        <option value="gemini">Gemini</option>
+        <option value="deepseek">DeepSeek</option>
+        <option value="grok">Grok</option>
+      </select>
+      <div class="account">✦ AUREON</div>
+    </header>
+
+    <main class="content">
+      <section class="welcome" id="welcome">
+        <small>YOUR INTELLIGENCE HUB</small>
+        <h1>Welcome to <span>AUREON AI</span></h1>
+        <p>One platform. Many AI models.<br>
+        A new universe of possibilities.</p>
+      </section>
+
+      <section class="tools" id="tools">
+        <div class="tool">
+          <strong>✧</strong>
+          AI Assistant
+        </div>
+        <div class="tool">
+          <strong>⌘</strong>
+          Coding
+        </div>
+        <div class="tool">
+          <strong>▧</strong>
+          Creative Tools
+        </div>
+      </section>
+
+      <section class="chat-area">
+        <div class="messages" id="messages">
+          <div class="message assistant">
+            Hello! Welcome to AUREON AI.
+            What would you like to explore today?
+          </div>
+        </div>
+
+        <form class="input-area" id="chatForm">
+          <input id="prompt" type="text"
+            placeholder="Ask AUREON AI anything..."
+            autocomplete="off" required>
+          <button class="send" type="submit">➤</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      © 2026 AUREON AI · POWERED BY INNOVATION
+    </footer>
+  </div>
+
+  <script>
+    const messages = document.getElementById("messages");
+    const form = document.getElementById("chatForm");
+    const promptInput = document.getElementById("prompt");
+    const model = document.getElementById("model");
+
+    function addMessage(text, type) {
+      const div = document.createElement("div");
+      div.className = "message " + type;
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const text = promptInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      promptInput.value = "";
+
+      const reply = "Welcome to AUREON AI! Your message was received. This is the initial interface demo. Real AI provider connections will be added securely in the next development stage.";
+
+      setTimeout(() => {
+        addMessage(reply, "assistant");
+      }, 500);
+    });
+
+    document.getElementById("newChat").addEventListener("click", () => {
+      messages.innerHTML = "";
+      addMessage("New conversation started. Welcome to AUREON AI!", "assistant");
+    });
+
+    document.getElementById("toolsNav").addEventListener("click", () => {
+      alert("AUREON AI Tools are coming soon!");
+    });
+
+    document.getElementById("historyNav").addEventListener("click", () => {
+      alert("Chat history will be added in a future update.");
+    });
+
+    document.getElementById("settingsNav").addEventListener("click", () => {
+      alert("Account and settings are coming soon.");
+    });
+
+    document.getElementById("chatNav").addEventListener("click", () => {
+      document.getElementById("welcome").scrollIntoView();
+    });
+
+    model.addEventListener("change", () => {
+      addMessage(
+        "Model preference changed to " +
+        model.options[model.selectedIndex].text +
+        ". Real provider integration is coming soon.",
+        "assistant"
+      );
+    });
+  </script>
+
+</body>
+</html>
